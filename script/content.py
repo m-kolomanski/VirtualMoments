@@ -1,13 +1,14 @@
-'''
-This is a script for manifest preparation. It fetches all the screenshots from a Steam profile,
-then crawls links to get the actual image links that can be used for display.
+"""
+This is a script for content preparation. It fetches all the screenshots from a Steam profile,
+then crawls links to get the actual image links and metadata that can be used for display. 
+Content is then saved to a JSON file, grouped by game name.
 
 TODO:
 - add error handling
 - add optimizations:
-  - load previous manifest and check if number of images to fetch changes
-- add ability to control fetched links with a config file (eg exclude specific games or screenshots)
-'''
+  - create a cache to not scrap pages that are already present?
+- add ability to control fetched links with a config file (eg exclude specific screenshots)
+"""
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
@@ -48,7 +49,7 @@ message("Fetching source")
 page = driver.page_source
 driver.quit()
 
-soup = BeautifulSoup(page, 'html.parser')
+soup = BeautifulSoup(page, "html.parser")
 a_tags = soup.find_all("a")
 hrefs = [a.get("href") for a in a_tags]
 ss_links = [h for h in hrefs if "sharedfiles/filedetails" in h]
@@ -59,7 +60,7 @@ ss_count = 0
 
 for h in ss_links:
     page = rq.get(h).text
-    soup = BeautifulSoup(page, 'html.parser')
+    soup = BeautifulSoup(page, "html.parser")
     img_link = soup.find("img", id="ActualMedia").get("src").split("?")[0]
     game = soup.select_one("div.screenshotAppName a").text
     title = soup.select_one("div.screenshotDescription")
@@ -80,4 +81,4 @@ for h in ss_links:
     ss_count += 1
 
 json.dump(content, open("content.json", "w"), indent=4)
-message(f'Done, fetched {ss_count} screenshots from {len(content)} games.')
+message(f"Done, fetched {ss_count} screenshots from {len(content)} games.")
