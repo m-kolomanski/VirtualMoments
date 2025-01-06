@@ -4,8 +4,6 @@ then crawls links to get the actual image links that can be used for display.
 
 TODO:
 - add error handling
-- add manifest creation
-- add fetching screenshot metadata (game, title etc)
 - add optimizations:
   - load previous manifest and check if number of images to fetch changes
 - add ability to control fetched links with a config file (eg exclude specific games or screenshots)
@@ -15,6 +13,7 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
 import requests as rq
+import json
 
 def message(msg):
     print(f"[{time.ctime()}] {msg}")
@@ -54,13 +53,31 @@ a_tags = soup.find_all("a")
 hrefs = [a.get("href") for a in a_tags]
 ss_links = [h for h in hrefs if "sharedfiles/filedetails" in h]
 
-content_links = []
-
 message("Fetching image links")
+content = {}
+ss_count = 0
+
 for h in ss_links:
     page = rq.get(h).text
     soup = BeautifulSoup(page, 'html.parser')
-    img_link = soup.find("img", id="ActualMedia")
-    content_links.append(img_link.get("src").split("?")[0])
+    img_link = soup.find("img", id="ActualMedia").get("src").split("?")[0]
+    game = soup.select_one("div.screenshotAppName a").text
+    title = soup.select_one("div.screenshotDescription")
 
-message(f'Done, images fetched: {len(content_links)}')
+    if not title:
+        title = ""
+    else:
+        title = title.text
+
+    if game not in content.keys():
+        content[game] = []
+
+    content[game].append({
+        "title": title,
+        "link": img_link
+    })
+    
+    ss_count += 1
+
+json.dump(content, open("content.json", "w"), indent=4)
+message(f'Done, fetched {ss_count} screenshots from {len(content)} games.')
