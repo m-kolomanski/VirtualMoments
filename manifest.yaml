@@ -1,0 +1,7 @@
+albums:
+  - name: "No Man's Sky"
+    games:
+      - "No Man's Sky"
+  - name: "The Witcher 3: Wild Hunt"
+    games:
+      - "The Witcher 3: Wild Hunt"
