@@ -68,7 +68,7 @@ for h in ss_links:
     if not title:
         title = ""
     else:
-        title = title.text
+        title = title.text.replace('"', '')
 
     if game not in content.keys():
         content[game] = []
