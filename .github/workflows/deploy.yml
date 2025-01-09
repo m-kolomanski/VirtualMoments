@@ -17,15 +17,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install python dependencies
+        run: pip install -r requirements.txt
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22'
 
-      - name: Install dependencies
+      - name: Install node dependencies
         working-directory: ./web
         run: 
           npm install
+
+      - name: Fetch content
+        run: python ./script/get_content.py
+
+      - name: Build Astro project
+        run: python ./script/build_astro.py
 
       - name: Build the site
         working-directory: ./web
