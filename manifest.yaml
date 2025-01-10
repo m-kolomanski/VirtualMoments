@@ -5,3 +5,14 @@ albums:
   - name: "The Witcher 3: Wild Hunt"
     games:
       - "The Witcher 3: Wild Hunt"
+  - name: "art of rally"
+    games:
+      - "art of rally"
+  - name: "Forza Horizon 5"
+    games:
+      - "Forza Horizon 5"
+  - name: "Motorsports"
+    games:
+      - "Asseto Corsa Competizione"
+      - "F1 2020"
+      - "Euro Truck Simulator 2"
