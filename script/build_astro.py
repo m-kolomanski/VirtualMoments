@@ -32,7 +32,7 @@ for album in manifest['albums']:
 
     page_name = album['name'].replace(' ', '_').replace(":", "").replace("'", "").lower()
 
-    album_cover_html = f'<Album name="{album["name"]}" path="/VirtualMoments/{page_name}/" />'
+    album_cover_html = f'<AlbumCover name="{album["name"]}" path="/VirtualMoments/{page_name}/" />'
     album_covers.append(album_cover_html)
 
     print(page_name)

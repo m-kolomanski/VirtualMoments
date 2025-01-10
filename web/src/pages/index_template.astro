@@ -1,12 +1,12 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Album from '../components/Album.astro';
+import IndexPage from '../layouts/IndexPage.astro';
+import AlbumCover from '../components/AlbumCover.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 ---
 
-<Layout>
+<IndexPage>
     <div
         class = "album-display d-flex justify-content-center align-items-center"
         slot = "albums"
@@ -16,4 +16,4 @@ import 'bootstrap/dist/css/bootstrap.min.css';
     <slot slot = "footer">
         <!-- FOOTER -->
     </slot>
-</Layout>
+</IndexPage>
