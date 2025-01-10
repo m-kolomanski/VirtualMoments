@@ -1,12 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Album from '../components/Album.astro';
+import Footer from '../components/Footer.astro';
 import '../styles/global.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 ---
 
 <Layout>
-    <div class = "album-display d-flex justify-content-center align-items-center">
+    <div
+        class = "album-display d-flex justify-content-center align-items-center"
+        slot = "albums"
+    >
         <!-- ALBUMS -->
     </div>
+    <slot slot = "footer">
+        <!-- FOOTER -->
+    </slot>
 </Layout>

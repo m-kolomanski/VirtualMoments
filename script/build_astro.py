@@ -5,6 +5,7 @@ files with pages / albums.
 
 import json
 import yaml
+from datetime import datetime
 
 with open("manifest.yaml", "r") as f:
     manifest = yaml.safe_load(f)
@@ -42,6 +43,13 @@ for album in manifest['albums']:
 with open("web/src/pages/index_template.astro", "r") as f:
     index_html = f.read()
 
+# Add albums to the index page #
 index_html = index_html.replace("<!-- ALBUMS -->", "\n".join(album_covers))
+
+# Add update date to the footer #
+date = datetime.now().strftime("%B %Y")
+index_html = index_html.replace("<!-- FOOTER -->", f'<Footer date="{date}" />')
+
+
 with open("web/src/pages/index.astro", "w") as f:
     f.write(index_html)

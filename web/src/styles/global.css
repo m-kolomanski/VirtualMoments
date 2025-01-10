@@ -1,5 +1,15 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
 .cover {
     width: 20vw;
     min-width: 12em !important;
@@ -11,4 +21,7 @@
 .album-display {
     flex-wrap: wrap;
     gap: 1rem;
+    flex: 1;
+    min-height: 0;
+    align-content: baseline;
 }
