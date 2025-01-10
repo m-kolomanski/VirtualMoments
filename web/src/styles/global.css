@@ -1,0 +1,14 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+.cover {
+    width: 20vw;
+    min-width: 12em !important;
+    max-width: 20em;
+    height: 30vh;
+    min-height: 25em;
+}
+
+.album-display {
+    flex-wrap: wrap;
+    gap: 1rem;
+}

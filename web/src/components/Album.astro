@@ -2,4 +2,9 @@
 const { name, path } = Astro.props;
 ---
 
-<div class = "cover"><a href={path}>{name}</a></div>
+<div class = "card cover">
+    <div class = "card-body">
+        <h5 class = "card-title">{name}</h5>
+        <a class = "card-text" href={path}>{name}</a>
+    </div>
+</div>
