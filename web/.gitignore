@@ -25,3 +25,7 @@ pnpm-debug.log*
 
 # vscode setting folder
 .vscode/
+
+# ignore all pages, apart from templates
+/src/pages/**
+!/src/pages/*_template.astro
