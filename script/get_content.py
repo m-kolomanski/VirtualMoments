@@ -15,9 +15,9 @@ from bs4 import BeautifulSoup
 import time
 import requests as rq
 import json
+from utils import parseSteamDate, message
 
-def message(msg):
-    print(f"[{time.ctime()}] {msg}")
+
 
 page_url = "https://steamcommunity.com/id/radvvan/screenshots/"
 
@@ -64,6 +64,7 @@ for h in ss_links:
     img_link = soup.find("img", id="ActualMedia").get("src").split("?")[0]
     game = soup.select_one("div.screenshotAppName a").text
     title = soup.select_one("div.screenshotDescription")
+    date = soup.select("div.detailsStatRight")[1].text
 
     if not title:
         title = ""
@@ -75,7 +76,8 @@ for h in ss_links:
 
     content[game].append({
         "title": title,
-        "link": img_link
+        "link": img_link,
+        "date": parseSteamDate(date)
     })
     
     ss_count += 1
