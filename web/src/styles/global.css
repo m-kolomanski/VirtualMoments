@@ -17,6 +17,11 @@ html, body {
     background-size: cover;
 }
 
+body.dark {
+    background: url('../assets/background_dark.svg') no-repeat center center;
+    background-size: cover;
+}
+
 .svg-background {
     position: fixed;
     top: 0;
@@ -71,6 +76,7 @@ header {
         width: fit-content;
         padding: 0.5em;
         margin: 0 .25em 0 .25em;
+        cursor: pointer;
 
         img {
             height: 2rem;
