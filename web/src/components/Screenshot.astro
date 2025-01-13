@@ -3,9 +3,15 @@ import { Image } from 'astro:assets';
 const { src, alt } = Astro.props;
 ---
 
-<Image
-    src={src}
-    alt={alt}
-    width=1900
-    height=800
-/>
+<div class="card">
+    <div class = "card-body">
+        <Image
+            src={src}
+            alt={alt}
+            inferSize={true}
+        />
+    </div>
+    <div class = "card-footer">
+        <h3>{alt}</h3>
+    </div>
+</div>

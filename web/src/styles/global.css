@@ -103,3 +103,29 @@ header {
 .card {
     --bs-card-border-color: var(--green) !important;
 }
+
+.screenshot-gallery {
+    display: grid;
+    grid-template-columns: 49% 49%;
+    column-gap: 2%;
+    margin: 0 5vw 0 5vw;
+
+    .card {
+        margin-bottom: 1em;
+    }
+
+    .card-body {
+        padding: 0.25em;
+    }
+
+    img {
+        width: 75vw;
+        height: auto;
+        max-width: 100%;
+        border-radius: .25em;
+    }
+
+    .card-footer {
+        text-align: right !important;
+    }
+}
