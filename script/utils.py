@@ -36,6 +36,6 @@ def parseSteamDate(date_string):
         current_year = datetime.now().year
         date_part_with_year = f"{date_part} {current_year}"
         parsed_date = datetime.strptime(date_part_with_year, '%d %b %Y')
-        formatted_date = parsed_date.strftime('%d %B %Y')
+        formatted_date = parsed_date.strftime('%B %d %Y')
 
     return formatted_date
