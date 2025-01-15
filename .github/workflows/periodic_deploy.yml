@@ -1,0 +1,14 @@
+name: Run tests, build and deploy
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/deploy.yml

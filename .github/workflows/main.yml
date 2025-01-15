@@ -1,0 +1,23 @@
+name: Run tests, build and deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  test_python:
+    name: Test python scripts
+    uses: ./.github/workflows/test_python.yml
+
+  deploy:
+    name: Run full build and deployment
+    needs: test_python
+    uses: ./.github/workflows/deploy.yml
