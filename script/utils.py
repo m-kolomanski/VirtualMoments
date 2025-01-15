@@ -24,18 +24,18 @@ def parseSteamDate(date_string):
         str: The formatted date string in the format "DD Month YYYY".
     """
     if "@" in date_string:
-        date_part = date_string.split("@")[0].strip()
-    else:
-        date_part = date_string.strip()
+        date_string = date_string.split("@")[0]
 
-    try:
-        parsed_date = datetime.strptime(date_part, "%d %b, %Y")
-        formatted_date = parsed_date.strftime("%d %B %Y")
-    except ValueError:
-        # If the year is missing, assume the current year
+    date_string = date_string.strip()
+
+    input_date_format = "%b %d, %Y" if date_string[0].isalpha() else "%d %b, %Y"
+
+    # if the year is missing, assume current year
+    if "," not in date_string:
         current_year = datetime.now().year
-        date_part_with_year = f"{date_part} {current_year}"
-        parsed_date = datetime.strptime(date_part_with_year, "%d %b %Y")
-        formatted_date = parsed_date.strftime("%d %B %Y")
+        date_string = f"{date_string}, {current_year}"
+
+    parsed_date = datetime.strptime(date_string, input_date_format)
+    formatted_date = parsed_date.strftime("%d %B %Y")
 
     return formatted_date
