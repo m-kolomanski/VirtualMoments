@@ -10,5 +10,5 @@ permissions:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    name: Run full build and deployment
     uses: ./.github/workflows/deploy.yml
