@@ -17,4 +17,4 @@ class TestParseSteamDate:
     def test_reverseFormat(self):
         assert parseSteamDate("Jan 25, 2021 @ 12:34pm") == "25 January 2021"
         assert parseSteamDate("Sep 15, 2023") == "15 September 2023"
-        assert parseSteamDate("May 10 @ 7:05am") == f"11 May {datetime.now().strftime('%Y')}"
+        assert parseSteamDate("May 10 @ 7:05am") == f"10 May {datetime.now().strftime('%Y')}"
