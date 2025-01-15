@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   deploy:
+    name: Deploy Astro to GitHub Pages
     runs-on: ubuntu-latest
 
     steps:
