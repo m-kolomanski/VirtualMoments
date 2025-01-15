@@ -1,13 +1,7 @@
 """
 This is a script for content preparation. It fetches all the screenshots from a Steam profile,
 then crawls links to get the actual image links and metadata that can be used for display. 
-Content is then saved to a JSON file, grouped by game name.
-
-TODO:
-- add error handling
-- add optimizations:
-  - create a cache to not scrap pages that are already present?
-- add ability to control fetched links with a config file (eg exclude specific screenshots)
+Content is then saved to a JSON file.
 """
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -15,52 +9,101 @@ from bs4 import BeautifulSoup
 import time
 import requests as rq
 import json
+import yaml
 from utils import parseSteamDate, message
 
+def fetchFullScreenshotProfile(url: str) -> str:
+    """
+    Fetches the full HTML content of a webpage by scrolling to the bottom.
+    This function uses Selenium to open a webpage in headless mode, scrolls to the bottom
+    to ensure all dynamic content is loaded, and then returns the full HTML source of the page.
+    Parameters:
+        url (str): The URL of the webpage to fetch.
+    Returns:
+        str: The full HTML content of the webpage.
+    """
+    message("\tSetting up selenium")
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run in headless mode
+    chrome_options.add_argument("--disable-gpu")  # Disable GPU (recommended for headless)
+    chrome_options.add_argument("--no-sandbox")  # Required for some Linux environments
+    chrome_options.add_argument("--disable-dev-shm-usage") 
 
+    driver = webdriver.Chrome(options=chrome_options)
 
-page_url = "https://steamcommunity.com/id/radvvan/screenshots/"
+    driver.get(url)
 
-message("Setting up selenium")
-chrome_options = Options()
-chrome_options.add_argument("--headless")  # Run in headless mode
-chrome_options.add_argument("--disable-gpu")  # Disable GPU (recommended for headless)
-chrome_options.add_argument("--no-sandbox")  # Required for some Linux environments
-chrome_options.add_argument("--disable-dev-shm-usage") 
+    scroll_pause = 2
+    last_height = driver.execute_script("return document.body.scrollHeight")
 
-driver = webdriver.Chrome(options=chrome_options)
+    message("\tScrolling")
+    while True:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(scroll_pause)
 
-driver.get(page_url)
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
 
-scroll_pause = 2
-last_height = driver.execute_script("return document.body.scrollHeight")
+    message("\tFetching source")
+    page = driver.page_source
+    driver.quit()
 
-message("Scrolling")
-while True:
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(scroll_pause)
+    return page
 
-    new_height = driver.execute_script("return document.body.scrollHeight")
-    if new_height == last_height:
-        break
-    last_height = new_height
+def extractScreenshotLinks(url: str = None, html_text: str = None) -> list[str]:
+    """
+    Extracts screenshot links from the provided HTML content or URL.
+    This function searches for all anchor tags in the HTML content and filters
+    out the links that contain "sharedfiles/filedetails" in their href attribute.
+    Parameters:
+        url (str, optional): The URL to fetch the HTML content from. Defaults to None.
+        html_text (str, optional): The HTML content as a string. Defaults to None.
+    Returns:
+        list[str]: A list of screenshot links found in the HTML content.
+    Raises:
+        ValueError: If both `url` and `html_text` are None.
+    """
+    if all([url is None, html_text is None]):
+        raise ValueError("Either url or html_text must be provided.")
+    
+    if html_text is None:
+        html_text = rq.get(url).text
 
-message("Fetching source")
-page = driver.page_source
-driver.quit()
+    soup = BeautifulSoup(html_text, "html.parser")
+    a_tags = soup.find_all("a")
+    hrefs = [a.get("href") for a in a_tags]
+    ss_links = [h for h in hrefs if "sharedfiles/filedetails" in h]
 
-soup = BeautifulSoup(page, "html.parser")
-a_tags = soup.find_all("a")
-hrefs = [a.get("href") for a in a_tags]
-ss_links = [h for h in hrefs if "sharedfiles/filedetails" in h]
+    return ss_links
 
-message("Fetching image links")
-content = {}
-ss_count = 0
+def extractScreenshotMetadata(url: str = None, html_text: str = None) -> dict[str, str, str, str]:
+    """
+    Extracts metadata from a screenshot page.
+    This function retrieves and parses the HTML content of a screenshot page to extract
+    metadata such as the game name, screenshot title, image link, and date.
+    The HTML content can be provided directly or fetched from a URL.
+    Parameters:
+        url (str, optional): The URL of the screenshot page. Defaults to None.
+        html_text (str, optional): The HTML content of the screenshot page. Defaults to None.
+    Returns:
+        dict: A dictionary with the extracted metadata:
+            - game (str): The name of the game.
+            - title (str): The title of the screenshot.
+            - link (str): The URL of the screenshot image.
+            - date (str): The date the screenshot was taken.
+    Raises:
+        ValueError: If both `url` and `html_text` are None.
+    """
 
-for h in ss_links:
-    page = rq.get(h).text
-    soup = BeautifulSoup(page, "html.parser")
+    if all([url is None, html_text is None]):
+        raise ValueError("Either url or html_text must be provided.")
+    
+    if html_text is None:
+        html_text = rq.get(url).text
+
+    soup = BeautifulSoup(html_text, "html.parser")
     img_link = soup.find("img", id="ActualMedia").get("src").split("?")[0]
     game = soup.select_one("div.screenshotAppName a").text
     title = soup.select_one("div.screenshotDescription")
@@ -71,16 +114,31 @@ for h in ss_links:
     else:
         title = title.text.replace('"', '')
 
-    if game not in content.keys():
-        content[game] = []
-
-    content[game].append({
+    return {
+        "game": game,
         "title": title,
         "link": img_link,
-        "date": parseSteamDate(date)
-    })
-    
-    ss_count += 1
+        "date": parseSteamDate(date) 
+    }
 
-json.dump(content, open("content.json", "w"), indent=4)
-message(f"Done, fetched {ss_count} screenshots from {len(content)} games.")
+
+if __name__ == "__main__":
+    message("Finding steam profile...")
+    with open("manifest.yaml", "r") as f:
+        manifest = yaml.safe_load(f)
+
+    page_url = manifest["content"]["steam_profile_url"]
+    if "screenshots" not in page_url:
+        page_url += "/screenshots/"
+
+    message("Fetching full screenshot profile...")
+    page = fetchFullScreenshotProfile(page_url)
+
+    message("Extracting screenshot links...")
+    ss_links = extractScreenshotLinks(html_text = page)
+
+    message("Extracting image links...")
+    content = [extractScreenshotMetadata(url = link) for link in ss_links]
+
+    json.dump(content, open("content.json", "w"))
+    message(f"Done, fetched {len(content)} screenshots.")
