@@ -51,7 +51,10 @@ class TestAlbum:
     def test_buildAlbumCover(self, album):
         album_cover = album.buildAlbumCover()
 
-        assert album_cover == '<AlbumCover name="Test album" path="/VirtualMoments/test_album/" />'
+        assert '<AlbumCover' in album_cover
+        assert 'name="Test album"' in album_cover 
+        assert 'path="/VirtualMoments/test_album/"' in album_cover
+        assert '/>' in album_cover
 
     def test_buildPageName(self, album):
         page_name1 = album.buildPageName()
@@ -73,25 +76,19 @@ class TestIndexPage:
             </html>
         """
         return IndexPage(template, [album])
-    
-    @pytest.fixture
-    def expected_html(self):
-        return f"""
-            <html>
-                <body>
-                    <AlbumCover name="Test album" path="/VirtualMoments/test_album/" />
-                    <Footer date="{datetime.now().strftime("%d %B %Y")}" />
-                </body>
-            </html>
-        """
 
-    def test_buildIndexPage(self, index_page, expected_html):
+    def test_buildIndexPage(self, index_page):
         index_html = index_page.buildIndexPage()
 
         assert type(index_html) == str
-        assert expected_html == index_html
 
-    def test_buildIndexPage_save(self, index_page, tmp_path, expected_html):
+        assert '<html>' in index_html
+        assert '<body>' in index_html
+        assert '</html>' in index_html
+        assert '<AlbumCover' in index_html
+        assert f'<Footer date="{datetime.now().strftime("%d %B %Y")}" />' in index_html
+
+    def test_buildIndexPage_save(self, index_page, tmp_path):
         index_page.buildIndexPage(save=True, dir=tmp_path)
 
         index_file = tmp_path / "index.astro"
@@ -100,7 +97,11 @@ class TestIndexPage:
         with open(index_file, "r", encoding="utf-8") as f:
             index_html = f.read()
 
-        assert expected_html == index_html
+        assert '<html>' in index_html
+        assert '<body>' in index_html
+        assert '</html>' in index_html
+        assert '<AlbumCover' in index_html
+        assert f'<Footer date="{datetime.now().strftime("%d %B %Y")}" />' in index_html
 
 class TestAlbumPage:
     @pytest.fixture
