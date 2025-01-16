@@ -1,5 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import Icon from "../components/Icon.astro"
+import LogoMode from "../assets/mode.svg";
+import LogoGithub from "../assets/logo/github.svg";
+import LogoSteam from "../assets/logo/steam.svg";
+import LogoLinkedin from "../assets/logo/linkedin.svg";
 ---
 
 <header style = "">
@@ -11,10 +16,10 @@ import Icon from "../components/Icon.astro"
     </div>
     <div class = "icons">
         <div class = "card icon-container" onclick = "document.body.classList.toggle('dark')">
-            <img src = "../assets/mode.svg" alt = "mode" />
+            <Image src = {LogoMode} alt = "mode" />
         </div>
-        <Icon src = "../assets/logo/github.svg" alt = "github" href = "https://github.com/m-kolomanski/VirtualMoments" />
-        <Icon src = "../assets/logo/steam.svg" alt = "steam" href = "https://steamcommunity.com/id/radvvan" />
-        <Icon src = "../assets/logo/linkedin.svg" alt = "linkedin" href = "https://www.linkedin.com/in/mateusz-ko%C5%82oma%C5%84ski-2b82aa1b9/" />
+        <Icon src = {LogoGithub} alt = "github" href = "https://github.com/m-kolomanski/VirtualMoments" />
+        <Icon src = {LogoSteam} alt = "steam" href = "https://steamcommunity.com/id/radvvan" />
+        <Icon src = {LogoLinkedin} alt = "linkedin" href = "https://www.linkedin.com/in/mateusz-ko%C5%82oma%C5%84ski-2b82aa1b9/" />
     </div>
 </header>
