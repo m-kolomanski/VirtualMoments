@@ -1,11 +1,8 @@
-name: Run tests, build and deploy
+name: Run tests, build and deploy upon changes
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
