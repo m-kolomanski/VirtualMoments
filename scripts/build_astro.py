@@ -4,10 +4,12 @@ files with pages / albums.
 """
 import json
 import yaml
+import os
 from datetime import datetime
 from utils import message
 
 class Album:
+    default_covers_path = "web/public/cover"
     """
     A class to represent an album containing games and screenshots.
 
@@ -76,7 +78,15 @@ class Album:
         ----------
             str: An HTML string for Astro <AlbumCover />.
         """
-        return f'<AlbumCover name="{self.name}" path="/VirtualMoments/{self.buildPageName()}/" />'
+        page_name = self.buildPageName()
+        cover_exists = os.path.exists(f"{self.default_covers_path}/{page_name}.svg")
+        return f'''
+            <AlbumCover
+                name="{self.name}"
+                path="/VirtualMoments/{page_name}/" 
+                { f'cover="{page_name}"' if cover_exists else "" }
+            />
+        '''
 
     def buildPageName(self) -> str:
         """
