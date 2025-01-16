@@ -10,7 +10,8 @@ import time
 import requests as rq
 import json
 import yaml
-from utils import parseSteamDate, message
+from datetime import datetime
+from utils import message
 
 def fetchFullScreenshotProfile(url: str) -> str:
     """
@@ -77,6 +78,36 @@ def extractScreenshotLinks(url: str = None, html_text: str = None) -> list[str]:
     ss_links = [h for h in hrefs if "sharedfiles/filedetails" in h]
 
     return ss_links
+
+def parseSteamDate(date_string):
+    """
+    Formats weird Steam date strings into a nicer format.
+    
+    Example conversion: "25 Jan, 2021 @ 12:34pm" -> "25 January 2021"
+
+    Parameters:
+        date_string (str): The input date string, as fetched from steamcommunity
+                           screenshot page.
+    
+    Returns:
+        str: The formatted date string in the format "DD Month YYYY".
+    """
+    if "@" in date_string:
+        date_string = date_string.split("@")[0]
+
+    date_string = date_string.strip()
+
+    input_date_format = "%b %d, %Y" if date_string[0].isalpha() else "%d %b, %Y"
+
+    # if the year is missing, assume current year
+    if "," not in date_string:
+        current_year = datetime.now().year
+        date_string = f"{date_string}, {current_year}"
+
+    parsed_date = datetime.strptime(date_string, input_date_format)
+    formatted_date = parsed_date.strftime("%d %B %Y")
+
+    return formatted_date
 
 def extractScreenshotMetadata(url: str = None, html_text: str = None) -> dict[str, str, str, str]:
     """
