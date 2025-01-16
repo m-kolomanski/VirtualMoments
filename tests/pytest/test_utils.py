@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 # Add the run directory to the path, othwerwise pytests
 # fails to find the tested file.
-script_path = Path(__file__).resolve().parent.parent.parent / "script"
+script_path = Path(__file__).resolve().parent.parent.parent / "scripts"
 sys.path.insert(0, str(script_path))
 
 from utils import parseSteamDate

@@ -36,10 +36,10 @@ jobs:
           npm install
 
       - name: Fetch content
-        run: python ./script/get_content.py
+        run: python ./scripts/get_content.py
 
       - name: Build Astro project
-        run: python ./script/build_astro.py
+        run: python ./scripts/build_astro.py
 
       - name: Build the site
         working-directory: ./web
