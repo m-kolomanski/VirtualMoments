@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="missing.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.51981271"
+     inkscape:cx="164.48232"
+     inkscape:cy="533.84612"
+     inkscape:window-width="2071"
+     inkscape:window-height="1211"
+     inkscape:window-x="682"
+     inkscape:window-y="116"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <rect
+       x="161.87697"
+       y="360.48233"
+       width="727.13241"
+       height="969.31057"
+       id="rect5" />
+  </defs>
+  <g
+     inkscape:label="Warstwa 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <ellipse
+       style="fill:#9f5fff;stroke-width:0.264583;fill-opacity:0.70476192"
+       id="path1"
+       cx="48.408642"
+       cy="48.948502"
+       rx="54.16729"
+       ry="53.627415" />
+    <ellipse
+       style="fill:#017618;stroke-width:0.264583;fill-opacity:0.54285717"
+       id="path1-8"
+       cx="158.98306"
+       cy="93.886307"
+       rx="71.083321"
+       ry="70.903358" />
+    <ellipse
+       style="fill:#7113ff;stroke-width:0.264583;fill-opacity:0.57619047"
+       id="path1-8-5"
+       ry="107.61475"
+       rx="111.75378"
+       cy="227.45866"
+       cx="81.975517" />
+    <circle
+       id="path5"
+       style="fill:#7113ff;stroke:#000000;stroke-width:0.264583"
+       cx="-86.739639"
+       cy="113.37339"
+       r="0.047940396" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,2.5449871,-63.115681)"
+       id="text5"
+       style="font-size:755.906px;text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect5);shape-padding:13.4664;fill:#AAAAAA;fill-opacity:0.14"><tspan
+         x="175.34375"
+         y="1063.5852"
+         id="tspan1">?</tspan></text>
+  </g>
+</svg>

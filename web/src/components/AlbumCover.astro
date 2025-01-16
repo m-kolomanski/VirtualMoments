@@ -1,8 +1,21 @@
 ---
+import { existsSync } from 'fs';
 const { name, path } = Astro.props;
+const default_cover_url = "/VirtualMoments/cover/missing.svg";
+
+const parts = path.split('/');
+parts.splice(2, 0, 'cover');
+parts[parts.length - 2] = `${parts[parts.length - 2]}.svg`;
+parts.pop();
+let cover_path = parts.join("/");
+console.log(cover_path);
+const found_cover = existsSync(cover_path);
+console.log(found_cover);
+cover_path = found_cover ? cover_path : default_cover_url;
+
 ---
 
-<div class = "card cover">
+<div class = "card cover" style = {"background: url(" + cover_path + ") no-repeat center center/cover;"} >
     <div class = "card-body">
         <h5 class = "card-title">{name}</h5>
         <a class = "card-text" href={path}>{name}</a>
