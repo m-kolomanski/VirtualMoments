@@ -2,11 +2,67 @@
 This script is for building Astro project by parsing the manifest and preparing
 files with pages / albums.
 """
-import json
 import yaml
 import os
 from datetime import datetime
-from utils import message
+
+class AstroBuilder:
+    """
+    Orchestrates building the Astro project from a manifest and content data.
+
+    Arguments:
+    ----------
+        web_dir (str): Path to the web/ directory containing templates and output pages.
+        manifest (str): List or path to manifest.yaml defining albums and games.
+        content (str): Path to the content file (YAML or JSON) with screenshot data.
+    """
+    def __init__(self, web_dir: str, manifest: str | list, content: str | list):
+        self.web_dir = web_dir
+        self.pages_dir = os.path.join(web_dir, "src", "pages")
+        self.covers_dir = os.path.join(web_dir, "public", "cover")
+        self.manifest = manifest
+        self.content = content
+
+        if isinstance(self.manifest, str):
+            with open(self.manifest, "r") as f:
+                self.manifest = yaml.safe_load(f)
+
+        if isinstance(self.content, str):
+            with open(self.content, "r") as f:
+                self.content = yaml.safe_load(f)
+
+        with open(os.path.join(self.pages_dir, "album_template.astro"), "r") as f:
+            self.album_template = f.read()
+
+        with open(os.path.join(self.pages_dir, "index_template.astro"), "r") as f:
+            self.index_template = f.read()
+
+    def build(self):
+        """
+        Builds all album pages and the index page, writing .astro files to the pages directory.
+        """
+        albums = [Album(a["name"], a["games"]) for a in self.manifest["albums"]]
+        albums.append(Album("Other", []))
+
+        for album in albums:
+            album.default_covers_path = self.covers_dir
+
+        for screenshot in self.content:
+            matched = any(
+                screenshot["game"] in album.games and (album.addScreenshot(screenshot) or True)
+                for album in albums
+            )
+            if not matched:
+                albums[-1].addScreenshot(screenshot)
+
+        for album in albums:
+            page = AlbumPage(self.album_template, album)
+            page.buildAlbumPage(save = True, dir = self.pages_dir)
+
+        index = IndexPage(self.index_template, albums)
+        index.buildIndexPage(save = True, dir = self.pages_dir)
+
+        return albums
 
 class Album:
     default_covers_path = "web/public/cover"
@@ -222,46 +278,3 @@ class AlbumPage:
                 f.write(album_html)
         else:
             return album_html
-
-if __name__ == "__main__":
-    message("Building Astro project...")
-    message("Loading files...")
-    with open("manifest.yaml", "r") as f:
-        manifest = yaml.safe_load(f)
-
-    with open("content.json", "r") as f:
-        content = json.load(f)
-
-    with open("web/src/pages/album_template.astro", "r") as f:
-        album_template = f.read()
-
-    with open("web/src/pages/index_template.astro", "r") as f:
-        index_template = f.read()  
-
-    message("Creating Albums...")
-    albums = [Album(album['name'], album['games']) for album in manifest['albums']]
-    albums.append(Album("Other", []))
-
-    for screenshot in content:
-        has_album = False
-
-        for album in albums:
-            if screenshot['game'] in album.games:
-                has_album = True
-                album.addScreenshot(screenshot)
-
-        if has_album:
-            continue
-        else:
-            albums[-1].addScreenshot(screenshot)
-
-    message("Bulding pages...")
-    index_page = IndexPage(index_template, albums)
-    album_pages = [AlbumPage(album_template, album) for album in albums]
-
-    for album_page in album_pages:
-        album_page.buildAlbumPage(save = True)
-
-    index_page.buildIndexPage(save = True)
-
-    message(f"Building complete for {len(album_pages)} albums.")
